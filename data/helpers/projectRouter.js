@@ -11,6 +11,18 @@ router.get("/:id/actions", validateProjectId, async (req, res) => {
   res.status(200).json(req.project.actions);
 });
 
+router.post("/", validateText, async (req, res) => {
+  try {
+    await projects.insert(req.body);
+    res.status(201).json(req.body);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "error processing request"
+    });
+  }
+});
+
 async function validateProjectId(req, res, next) {
   try {
     const { id } = req.params;
@@ -26,4 +38,17 @@ async function validateProjectId(req, res, next) {
   }
 }
 
+async function validateText(req, res, next) {
+  try {
+    if (req.body.name.length > 0 && req.body.description.length > 0) {
+      console.log("validated text");
+      next();
+    } else {
+      res.status(400).json({ message: "please fill out required fields" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "error processing request" });
+  }
+}
 module.exports = router;
