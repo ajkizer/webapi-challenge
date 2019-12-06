@@ -7,6 +7,14 @@ router.get("/:id", validateProjectId, async (req, res) => {
   res.status(200).json(req.project);
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const projectList = await projects.getAll();
+    res.status(200).json(projectList);
+  } catch (error) {
+    res.status(500).json({ message: "error" });
+  }
+});
 router.get("/:id/actions", validateProjectId, async (req, res) => {
   res.status(200).json(req.project.actions);
 });
@@ -20,6 +28,16 @@ router.post("/", validateText, async (req, res) => {
     res.status(500).json({
       message: "error processing request"
     });
+  }
+});
+
+router.delete("/:id", validateProjectId, async (req, res) => {
+  try {
+    const { id } = req.project;
+    await projects.remove(id);
+    res.status(200).json({ message: "action removed" });
+  } catch (error) {
+    res.status(500).json({ message: "could not process request" });
   }
 });
 
