@@ -35,9 +35,25 @@ router.delete("/:id", validateProjectId, async (req, res) => {
   try {
     const { id } = req.project;
     await projects.remove(id);
-    res.status(200).json({ message: "action removed" });
+    res.status(200).json({ message: "project removed" });
   } catch (error) {
     res.status(500).json({ message: "could not process request" });
+  }
+});
+
+router.put("/:id", validateProjectId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const changes = req.body;
+
+    if (changes) {
+      await projects.update(id, changes);
+      res.status(200).json({ message: "project updated" });
+    } else {
+      res.status(400).json({ message: "please enter text into field" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "please enter text into field" });
   }
 });
 
