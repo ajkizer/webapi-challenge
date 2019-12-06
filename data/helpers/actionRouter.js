@@ -40,6 +40,21 @@ router.delete("/:id", validateActionId, async (req, res) => {
   }
 });
 
+router.put("/:id", validateActionId, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const changes = req.body;
+    if (changes) {
+      await actions.update(id, changes);
+      res.status(200).json({ message: "action updated" });
+    } else {
+      res.status(400).json({ message: "please enter text" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "error" });
+  }
+});
+
 //middleware
 async function validateActionId(req, res, next) {
   try {
